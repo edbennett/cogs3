@@ -22,7 +22,7 @@ class FundingBody(models.Model):
 
     name = models.CharField(max_length=128, unique=True)
     description = models.CharField(max_length=512)
-    created_time = models.DateTimeField(auto_now_add=True)
+    created_time = models.DateTimeField(auto_now_add=True)r
     modified_time = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -187,10 +187,7 @@ class FundingSource(Attribution):
             pi_group = Group.objects.get(name='funding_source_pi')
             pi_group.user_set.add(self.pi)
 
-        if self.pi.profile.institution.needs_funding_approval:
-            self.owner = self.pi
-        else:
-            self.owner = self.created_by
+        self.owner = self.pi
 
         self.pi_email = None
 
