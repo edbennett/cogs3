@@ -104,10 +104,12 @@ class FundingSourceCreateView(SuccessMessageMixin, LoginRequiredMixin, generic.C
             self.request.session['FundingSourceCreateInit'] = self.request.POST
             return HttpResponseRedirect(reverse_lazy('create-funding-source')+popup)
 
-        if institution.needs_funding_approval:
-            del self.request.session['FundingSourceCreateInit']
         fundingsource.created_by = self.request.user
         fundingsource.save()
+
+        if institution.needs_funding_approval:
+            del self.request.session['FundingSourceCreateInit']
+            self.notify_pi(fundingsource)
 
         if self.request.GET.get('_popup'):
             return HttpResponse('''
